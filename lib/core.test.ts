@@ -26,4 +26,12 @@ describe("core", () => {
 		expect(e).toBeInstanceOf(CustomError)
 		expect(e.message).toEqual(error.message)
 	})
+
+	it("should return error with same message as arg string", () => {
+		const m = "message"
+		const [v, e] = err(m)
+		expect(v).toBeUndefined()
+		expect(e).toBeInstanceOf(Error)
+		expect(e.message).toEqual(m)
+	})
 })

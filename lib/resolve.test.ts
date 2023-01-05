@@ -10,6 +10,12 @@ describe("resolve", () => {
 		expect(e).toBeUndefined()
 	})
 
+	it("should return undefined for void", async () => {
+		const [v, e] = await resolve(Promise.resolve())
+		expect(v).toBeUndefined()
+		expect(e).toBeUndefined()
+	})
+
 	it("should return error", async () => {
 		const error = new Error("message")
 		const [v, e] = await resolve(Promise.reject(error))

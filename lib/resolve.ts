@@ -1,5 +1,5 @@
 import {type Result, ok} from "./core"
-import {type ErrorHandlerOptions, handleError} from "./handle-error"
+import {type ErrorHandlerOptions, handleError} from "./handle_error"
 
 export async function resolve<E extends Error = Error>(
 	value: Promise<void>,

@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest"
-import {isPromise} from "./is-promise"
+import {isPromise} from "./is_promise"
 
 describe("isPromise", () => {
 	it("should return true for promise", () => {

@@ -1,6 +1,6 @@
 import {type Result, ok} from "./core"
-import {type ErrorHandlerOptions, handleError} from "./handle-error"
-import {isPromise} from "./is-promise"
+import {type ErrorHandlerOptions, handleError} from "./handle_error"
+import {isPromise} from "./is_promise"
 import {resolve} from "./resolve"
 
 export function exec<V extends Promise<any>, E extends Error = Error>(

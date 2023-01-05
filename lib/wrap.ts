@@ -1,4 +1,4 @@
-import type {ErrorHandlerOptions} from "./handle-error"
+import type {ErrorHandlerOptions} from "./handle_error"
 import {exec, execAsync, execSync} from "./exec"
 import type {Result} from "./core"
 

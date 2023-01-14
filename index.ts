@@ -1,5 +1,5 @@
-import * as ergol from "./lib"
+import * as gotscha from "./lib"
 
 export * from "./lib"
-export {ergol}
-export const r = ergol
+export {gotscha}
+export const g = gotscha

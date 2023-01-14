@@ -1,4 +1,4 @@
-# ergol
+# gotscha
 
 Go-like error handling implemented for TypeScript
 
@@ -10,9 +10,9 @@ is required to use control flow analysis for destructured discriminated unions](
 ### Import
 
 ```ts
-import {r} from "ergol"
-// or import * as ergol from "ergol"
-// or import {ergol} from "ergol"
+import {g} from "gotscha"
+// or import * as gotscha from "gotscha"
+// or import {gotscha} from "gotscha"
 ```
 
 ### Methods
@@ -20,8 +20,8 @@ import {r} from "ergol"
 Use result type with `ok` and `err` convenience methods
 
 ```ts
-function foo(v: number): r.Result<number> {
-	return v % 2 ? r.ok(1) : r.err(new Error("odd number"))
+function foo(v: number): g.Result<number> {
+	return v % 2 ? g.ok(1) : g.err(new Error("odd number"))
 }
 
 const [value, err] = foo()
@@ -36,13 +36,13 @@ Execute an existing function with `exec` to get a result array
 function bar(): number {
 	return 1
 }
-const [value, err] = r.exec(bar)
+const [value, err] = g.exec(bar)
 ```
 
 Wrap an existing function, call the returned function to get a result array
 
 ```ts
-const bazz = r.wrap(bar)
+const bazz = g.wrap(bar)
 const [value, err] = bazz()
 ```
 
@@ -51,11 +51,11 @@ const [value, err] = bazz()
 Throw panic if something is really wrong
 
 ```ts
-function listen(): r.Result<void> {
+function listen(): g.Result<void> {
 	if (Math.random() < 0.5) {
-		throw new r.Panic("connection lost")
+		throw new g.Panic("connection lost")
 	}
-	return r.ok(undefined)
+	return g.ok(undefined)
 }
 
 // Panic instance won't be caught, `err` is always `undefined`
@@ -65,7 +65,7 @@ const [value, err] = listen()
 Use `catchPanic` option to customize panic handling
 
 ```ts
-r.exec(fn, {
+g.exec(fn, {
 	catchPanic: true, // `false` by default
 })
 ```
@@ -73,7 +73,7 @@ r.exec(fn, {
 Use `preprocess` option to process errors
 
 ```ts
-r.exec(fn, {
+g.exec(fn, {
 	preprocess: (error: unknown) => {
 		if (error instanceof IOError) {
 			return new Panic(error.message)
@@ -89,13 +89,13 @@ r.exec(fn, {
 Use `override` option to completely override default error handling
 
 ```ts
-r.exec(fn, {
+g.exec(fn, {
 	override: (error: unknown) => {
 		if (error instanceof HTTPError) {
 			// Won't be caught
 			throw new Error(error.message)
 		}
-		return r.err()
+		return g.err()
 	},
 })
 ```

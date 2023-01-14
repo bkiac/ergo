@@ -11,6 +11,12 @@ describe("core", () => {
 		expect(e).toBeUndefined()
 	})
 
+	it("should return undefined if empty", () => {
+		const [v, e] = ok()
+		expect(v).toBeUndefined()
+		expect(e).toBeUndefined()
+	})
+
 	it("should return error", () => {
 		const error = new Error("message")
 		const [v, e] = err(error)

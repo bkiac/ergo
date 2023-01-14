@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest"
 import {err} from "./core"
-import {handleError} from "./handle-error"
+import {handleError} from "./handle_error"
 import {Panic} from "./panic"
 
 class OverrideError extends Error {}

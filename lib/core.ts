@@ -8,4 +8,8 @@ export function ok<V>(value: V): Ok<V> {
 	return [value, undefined]
 }
 
-export const err = <E extends Error>(error: E): Err<E> => [undefined, error]
+export function err<E extends Error = Error>(error: E): Err<E>
+export function err(error: string): Err<Error>
+export function err(error: Error | string): Err<Error> {
+	return [undefined, error instanceof Error ? error : new Error(error)]
+}

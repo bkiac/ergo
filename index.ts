@@ -1,5 +1,4 @@
-import * as gotscha from "./lib"
-
+import * as mod from "./lib"
 export * from "./lib"
-export {gotscha}
-export const g = gotscha
+export {mod as gotscha, mod as g}
+export default gotscha

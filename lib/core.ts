@@ -1,5 +1,5 @@
-export type Ok<V> = readonly [undefined, V]
-export function ok(value?: undefined): Ok<undefined>
+export type Ok<V = undefined> = readonly [undefined, V]
+export function ok(value?: undefined): Ok
 export function ok<V>(value: V): Ok<V>
 export function ok<V>(value: V): Ok<V> {
 	return [undefined, value] as const
@@ -10,4 +10,4 @@ export function err(error: Error | string): Err {
 	return [error instanceof Error ? error : new Error(error), undefined] as const
 }
 
-export type Result<V> = Ok<V> | Err
+export type Result<V = undefined> = Ok<V> | Err

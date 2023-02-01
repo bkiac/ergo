@@ -20,6 +20,7 @@ describe("resolve", () => {
 		const error = new Error("message")
 		const [e, v] = await resolve(Promise.reject(error))
 		expect(v).toBeUndefined()
+		expect(e).toBeDefined()
 		if (e) {
 			expect(e).toBeInstanceOf(Error)
 			expect(e.message).toEqual(error.message)

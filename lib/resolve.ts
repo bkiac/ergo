@@ -1,17 +1,10 @@
 import {type Result, ok} from "./core"
 import {type ErrorHandlerOptions, handleError} from "./handle_error"
 
-export async function resolve<E extends Error = Error>(
-	value: Promise<void>,
-	options?: ErrorHandlerOptions<E>,
-): Promise<Result<undefined, E>>
-export async function resolve<V, E extends Error = Error>(
-	value: Promise<V>,
-	options?: ErrorHandlerOptions<E>,
-): Promise<Result<V, E>>
-export async function resolve<V, E extends Error = Error>(
-	value: Promise<V>,
-	options?: ErrorHandlerOptions<E>,
-): Promise<Result<V, E>> {
-	return value.then((v) => ok(v)).catch((e: unknown) => handleError<E>(e, options))
+export async function resolve<V>(value: Promise<V>, options?: ErrorHandlerOptions): Promise<Result<V>> {
+	try {
+		return ok(await value)
+	} catch (e: unknown) {
+		return handleError(e, options)
+	}
 }

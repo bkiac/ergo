@@ -1,5 +1,6 @@
 import {type Result, ok} from "./core"
 import {type ErrorHandlerOptions, handleError} from "./handle_error"
+import {resolve} from "./resolve"
 
 export function exec<V>(fn: () => V, options?: ErrorHandlerOptions): Result<V> {
 	try {
@@ -13,9 +14,5 @@ export async function execAsync<V extends Promise<any>>(
 	fn: () => V,
 	options?: ErrorHandlerOptions,
 ): Promise<Result<Awaited<V>>> {
-	try {
-		return ok(await fn())
-	} catch (e: unknown) {
-		return handleError(e, options)
-	}
+	return resolve(await fn(), options)
 }

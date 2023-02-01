@@ -23,7 +23,7 @@ Use result type with `ok` and `err` convenience methods
 
 ```ts
 function foo(v: number): g.Result<number> {
-	return v % 2 ? g.ok(1) : g.err(new Error("odd number"))
+	return v % 2 ? g.ok(v) : g.err(new Error("odd number"))
 }
 
 const [error, value] = foo()
@@ -40,7 +40,7 @@ function foo(): number {
 	if (r < 0.5) {
 		throw Error("error")
 	}
-	return 1
+	return r
 }
 const [error, value] = g.exec(foo)
 ```
@@ -48,8 +48,9 @@ const [error, value] = g.exec(foo)
 Wrap an existing function then call the returned function to get a result tuple
 
 ```ts
+const foo = (arg1: number, arg2: string) => {...}
 const bar = g.wrap(foo)
-const [error, value] = bar()
+const [error, value] = bar(0, "1") // Wrapped function keeps function signature
 ```
 
 ### Panic
@@ -57,22 +58,35 @@ const [error, value] = bar()
 Throw panic if something is really wrong
 
 ```ts
-function foo(): g.Result<void> {
+function foo(): g.Result {
 	if (Math.random() < 0.5) {
 		throw new g.Panic()
 	}
 	return g.ok()
 }
-
-// Panic instance won't be caught, `error` is always `undefined`
-const [error, value] = foo()
+const [error, value] = foo() // Will throw error
 ```
 
-Use `catchPanic` option to customize panic handling
+Use `recover` option to recover from panics
+
+```ts
+function foo(): g.Result {
+	if (Math.random() < 0.5) {
+		throw new g.Panic()
+	}
+	return g.ok()
+}
+const [error, value] = g.exec(foo, {
+	recover: true, // `false` by default
+})
+console.log(error instance of g.Panic) // true
+```
+
+Use `panicOn` option to specify error instances that should be seen as panic
 
 ```ts
 g.exec(fn, {
-	catchPanic: true, // `false` by default
+	panicOn: [TypeError], // If `fn` throws `TypeError`, `exec` will rethrow it
 })
 ```
 
@@ -92,16 +106,10 @@ g.exec(fn, {
 })
 ```
 
-Use `override` option to completely override default error handling
+### Create instance with default options
 
 ```ts
-g.exec(fn, {
-	override: (error: unknown) => {
-		if (error instanceof HTTPError) {
-			// Won't be caught
-			throw new Error(error.message)
-		}
-		return g.err()
-	},
-})
+import {create} from "gotscha"
+
+const g = create({panicOn: [TypeError]})
 ```

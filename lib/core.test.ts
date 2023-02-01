@@ -1,8 +1,6 @@
 import {describe, expect, it} from "vitest"
 import {ok, err} from "./core"
 
-class CustomError extends Error {}
-
 describe("core", () => {
 	it("should return value", () => {
 		const value = 1
@@ -26,6 +24,7 @@ describe("core", () => {
 	})
 
 	it("should return custom error", () => {
+		class CustomError extends Error {}
 		const error = new CustomError("custom message")
 		const [e, v] = err(error)
 		expect(v).toBeUndefined()

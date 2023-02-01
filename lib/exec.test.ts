@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest"
-import {exec} from "./exec"
+import {exec, execAsync} from "./exec"
 
 describe("exec", () => {
 	describe("sync", () => {
@@ -26,17 +26,18 @@ describe("exec", () => {
 	describe("async", () => {
 		it("should return value", async () => {
 			const value = 1
-			const [e, v] = await exec(async () => value)
+			const [e, v] = await execAsync(async () => value)
 			expect(v).toBe(value)
 			expect(e).toBeUndefined()
 		})
 
 		it("should return error", async () => {
 			const error = new Error("message")
-			const [e, v] = await exec(async () => {
+			const [e, v] = await execAsync(async () => {
 				throw error
 			})
 			expect(v).toBeUndefined()
+			expect(e).toBeDefined()
 			if (e) {
 				expect(e).toBeInstanceOf(Error)
 				expect(e.message).toEqual(error.message)

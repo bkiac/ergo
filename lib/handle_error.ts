@@ -1,35 +1,33 @@
-import type {MergeExclusive, Simplify} from "type-fest"
 import {Err, err} from "./core"
 import {Panic} from "./panic"
 
-export type ErrorHandlerOptions<E extends Error> = Simplify<
-	MergeExclusive<
-		{
-			/** Default to false */
-			catchPanic?: boolean
-			/** Preprocess caught error to turn it into an Error or Panic */
-			preprocess?: (e: unknown) => Error | Panic
-		},
-		{
-			/** Override error handling process, will disregard any other option */
-			override: (e: unknown) => Err<E>
-		}
-	>
->
+function defaultPreprocess(unknown: unknown, panicOn?: [ErrorConstructor, ...ErrorConstructor[]]): Error | Panic {
+	if (!(unknown instanceof Error)) {
+		return new Panic(`expected Error, got ${typeof unknown}`)
+	}
+	const shouldPanic = panicOn?.find((error) => unknown instanceof error)
+	if (shouldPanic) {
+		return new Panic(unknown)
+	}
+	return unknown
+}
 
-export const handleError = <E extends Error>(
-	error: unknown,
-	{override, catchPanic = false, preprocess}: ErrorHandlerOptions<E> = {},
-): Err<E> => {
-	if (override) {
-		return override(error)
+export type ErrorHandlerOptions = {
+	/** Panic on any error instance from this array */
+	panicOn?: [ErrorConstructor, ...ErrorConstructor[]]
+	/** Recover panic, defaults to false */
+	recover?: boolean
+	/** Preprocess caught error to turn it into an Error or Panic */
+	preprocess?: (unknown: unknown) => Error | Panic
+}
+
+export const handleError = (
+	unknown: unknown,
+	{panicOn, recover = false, preprocess = (unknown) => defaultPreprocess(unknown, panicOn)}: ErrorHandlerOptions = {},
+): Err => {
+	const error = preprocess(unknown)
+	if (!recover && error instanceof Panic) {
+		throw error
 	}
-	const e = preprocess ? preprocess(error) : error
-	if (!catchPanic && e instanceof Panic) {
-		throw e
-	}
-	if (!(e instanceof Error)) {
-		throw new Panic(`expected error, got ${e}`)
-	}
-	return err(e as E)
+	return err(error)
 }

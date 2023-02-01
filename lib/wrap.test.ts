@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest"
-import {wrap} from "./wrap"
+import {wrap, wrapAsync} from "./wrap"
 
 describe("wrap", () => {
 	it("should accept multiple args", () => {
@@ -27,6 +27,7 @@ describe("wrap", () => {
 			})
 			const [e, v] = fn()
 			expect(v).toBeUndefined()
+			expect(e).toBeDefined()
 			if (e) {
 				expect(e).toBeInstanceOf(Error)
 				expect(e.message).toEqual(error.message)
@@ -37,7 +38,7 @@ describe("wrap", () => {
 	describe("async", () => {
 		it("should return value", async () => {
 			const value = 1
-			const fn = wrap(async (arg: number) => arg)
+			const fn = wrapAsync(async (arg: number) => arg)
 			const [e, v] = await fn(value)
 			expect(v).toBe(value)
 			expect(e).toBeUndefined()
@@ -45,11 +46,12 @@ describe("wrap", () => {
 
 		it("should return error", async () => {
 			const error = new Error("message")
-			const fn = wrap(async () => {
+			const fn = wrapAsync(async () => {
 				throw error
 			})
 			const [e, v] = await fn()
 			expect(v).toBeUndefined()
+			expect(e).toBeDefined()
 			if (e) {
 				expect(e).toBeInstanceOf(Error)
 				expect(e.message).toEqual(error.message)

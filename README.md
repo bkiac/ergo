@@ -5,6 +5,8 @@ Go-like error handling implemented for TypeScript
 [TypeScript >=v4.6
 is required to use control flow analysis for destructured discriminated unions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-6.html#control-flow-analysis-for-destructured-discriminated-unions)
 
+If you prefer to use Rust's `Result` check out [oxide.ts](https://github.com/traverse1984/oxide.ts)
+
 ## Documentation
 
 ### Import

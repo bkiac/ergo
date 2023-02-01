@@ -83,9 +83,10 @@ console.log(error instance of g.Panic) // true
 ```
 
 Use `panicOn` option to specify error instances that should be seen as panic
+
 ```ts
 g.exec(fn, {
-	panicOn: [TypeError] // If `fn` throws `TypeError`, `exec` will rethrow it
+	panicOn: [TypeError], // If `fn` throws `TypeError`, `exec` will rethrow it
 })
 ```
 

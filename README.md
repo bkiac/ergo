@@ -26,7 +26,7 @@ function foo(v: number): g.Result<number> {
 	return v % 2 ? g.ok(1) : g.err(new Error("odd number"))
 }
 
-const [value, error] = foo()
+const [error, value] = foo()
 if (!error) {
 	const v = value // `v` is number
 }
@@ -42,14 +42,14 @@ function foo(): number {
 	}
 	return 1
 }
-const [value, error] = g.exec(foo)
+const [error, value] = g.exec(foo)
 ```
 
 Wrap an existing function then call the returned function to get a result tuple
 
 ```ts
 const bar = g.wrap(foo)
-const [value, error] = bar()
+const [error, value] = bar()
 ```
 
 ### Panic
@@ -65,7 +65,7 @@ function foo(): g.Result<void> {
 }
 
 // Panic instance won't be caught, `error` is always `undefined`
-const [value, error] = foo()
+const [error, value] = foo()
 ```
 
 Use `catchPanic` option to customize panic handling

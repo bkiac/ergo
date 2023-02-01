@@ -24,26 +24,30 @@ function foo(v: number): g.Result<number> {
 	return v % 2 ? g.ok(1) : g.err(new Error("odd number"))
 }
 
-const [value, err] = foo()
-if (!err) {
+const [value, error] = foo()
+if (!error) {
 	const v = value // `v` is number
 }
 ```
 
-Execute an existing function with `exec` to get a result array
+Execute an existing function with `exec` to get a result tuple
 
 ```ts
-function bar(): number {
+function foo(): number {
+	const r = Math.random()
+	if (r < 0.5) {
+		throw Error("error")
+	}
 	return 1
 }
-const [value, err] = g.exec(bar)
+const [value, error] = g.exec(foo)
 ```
 
-Wrap an existing function, call the returned function to get a result array
+Wrap an existing function then call the returned function to get a result tuple
 
 ```ts
-const bazz = g.wrap(bar)
-const [value, err] = bazz()
+const bar = g.wrap(foo)
+const [value, error] = bar()
 ```
 
 ### Panic
@@ -51,15 +55,15 @@ const [value, err] = bazz()
 Throw panic if something is really wrong
 
 ```ts
-function listen(): g.Result<void> {
+function foo(): g.Result<void> {
 	if (Math.random() < 0.5) {
-		throw new g.Panic("connection lost")
+		throw new g.Panic()
 	}
-	return g.ok(undefined)
+	return g.ok()
 }
 
-// Panic instance won't be caught, `err` is always `undefined`
-const [value, err] = listen()
+// Panic instance won't be caught, `error` is always `undefined`
+const [value, error] = foo()
 ```
 
 Use `catchPanic` option to customize panic handling

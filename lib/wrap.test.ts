@@ -6,7 +6,7 @@ describe("wrap", () => {
 		const arg1 = 1
 		const arg2 = 2
 		const fn = wrap((...args: number[]) => args.reduce((a, b) => a + b, 0))
-		const [v, e] = fn(arg1, arg2)
+		const [e, v] = fn(arg1, arg2)
 		expect(v).toBe(arg1 + arg2)
 		expect(e).toBeUndefined()
 	})
@@ -15,7 +15,7 @@ describe("wrap", () => {
 		it("should return value", () => {
 			const value = 1
 			const fn = wrap((arg: number) => arg)
-			const [v, e] = fn(value)
+			const [e, v] = fn(value)
 			expect(v).toBe(value)
 			expect(e).toBeUndefined()
 		})
@@ -25,7 +25,7 @@ describe("wrap", () => {
 			const fn = wrap(() => {
 				throw error
 			})
-			const [v, e] = fn()
+			const [e, v] = fn()
 			expect(v).toBeUndefined()
 			if (e) {
 				expect(e).toBeInstanceOf(Error)
@@ -38,7 +38,7 @@ describe("wrap", () => {
 		it("should return value", async () => {
 			const value = 1
 			const fn = wrap(async (arg: number) => arg)
-			const [v, e] = await fn(value)
+			const [e, v] = await fn(value)
 			expect(v).toBe(value)
 			expect(e).toBeUndefined()
 		})
@@ -48,7 +48,7 @@ describe("wrap", () => {
 			const fn = wrap(async () => {
 				throw error
 			})
-			const [v, e] = await fn()
+			const [e, v] = await fn()
 			expect(v).toBeUndefined()
 			if (e) {
 				expect(e).toBeInstanceOf(Error)

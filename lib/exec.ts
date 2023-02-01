@@ -10,9 +10,6 @@ export function exec<V>(fn: () => V, options?: ErrorHandlerOptions): Result<V> {
 	}
 }
 
-export async function execAsync<V extends Promise<any>>(
-	fn: () => V,
-	options?: ErrorHandlerOptions,
-): Promise<Result<Awaited<V>>> {
-	return resolve(await fn(), options)
+export async function execAsync<V>(fn: () => Promise<V>, options?: ErrorHandlerOptions): Promise<Result<V>> {
+	return resolve(fn(), options)
 }

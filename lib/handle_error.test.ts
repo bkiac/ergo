@@ -8,7 +8,7 @@ class OverrideError extends Error {}
 describe("handleError", () => {
 	it("should use override", () => {
 		const msg = "override error message"
-		const [, error] = handleError(new Error("msg"), {
+		const [error] = handleError(new Error("msg"), {
 			override: () => err(new OverrideError(msg)),
 		})
 		expect(error).toBeInstanceOf(OverrideError)
@@ -18,7 +18,7 @@ describe("handleError", () => {
 	describe("preprocess", () => {
 		it("should preprocess unknown into error", () => {
 			const msg = "message"
-			const [, error] = handleError(msg, {
+			const [error] = handleError(msg, {
 				preprocess: (e) => new Error(e as string),
 			})
 			expect(error).toBeInstanceOf(Error)
@@ -43,7 +43,7 @@ describe("handleError", () => {
 
 		it("should not throw on panic with catchPanic true", () => {
 			const msg = "panic"
-			const [, error] = handleError(new Panic(msg), {catchPanic: true})
+			const [error] = handleError(new Panic(msg), {catchPanic: true})
 			expect(error).toBeInstanceOf(Panic)
 			expect(error.message).toBe(msg)
 		})

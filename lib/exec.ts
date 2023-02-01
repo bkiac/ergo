@@ -3,34 +3,34 @@ import {type ErrorHandlerOptions, handleError} from "./handle_error"
 import {isPromise} from "./is_promise"
 import {resolve} from "./resolve"
 
-export function exec<V extends Promise<any>, E extends Error = Error>(
-	fn: () => V,
-	options?: ErrorHandlerOptions<E>,
-): Promise<Result<Awaited<V>, E>>
-export function exec<V, E extends Error = Error>(fn: () => V, options?: ErrorHandlerOptions<E>): Result<V, E>
-export function exec<V, E extends Error = Error>(fn: () => V | Promise<V>, options?: ErrorHandlerOptions<E>) {
-	try {
-		const v = fn()
-		if (isPromise(v)) {
-			return resolve<V, E>(v, options)
+export class Exec {
+	constructor(private defaultOptions?: ErrorHandlerOptions) {}
+
+	public exec<V extends Promise<any>>(fn: () => V, options?: ErrorHandlerOptions): Promise<Result<Awaited<V>>>
+	public exec<V>(fn: () => V, options?: ErrorHandlerOptions): Result<V>
+	public exec<V>(fn: () => V | Promise<V>, options?: ErrorHandlerOptions) {
+		const o = {...this.defaultOptions, ...options}
+		try {
+			const v = fn()
+			if (isPromise(v)) {
+				return resolve<V>(v, o)
+			}
+			return ok(v)
+		} catch (e: unknown) {
+			return handleError(e, o)
 		}
-		return ok(v)
-	} catch (e: unknown) {
-		return handleError<E>(e, options)
+	}
+
+	public execSync<V>(fn: () => V, options?: ErrorHandlerOptions): Result<V> {
+		return exec(fn, options)
+	}
+
+	public execAsync<V>(fn: () => Promise<V>, options?: ErrorHandlerOptions): Promise<Result<V>> {
+		return exec(fn, options)
 	}
 }
 
-export function execSync<V, E extends Error = Error>(fn: () => V, options?: ErrorHandlerOptions<E>): Result<V, E> {
-	return exec(fn, options)
-}
-
-export async function execAsync<V, E extends Error = Error>(
-	fn: () => Promise<V>,
-	options?: ErrorHandlerOptions<E>,
-): Promise<Result<V, E>> {
-	return exec(fn, options)
-}
-
-export const call = exec
-export const callSync = execSync
-export const callAsync = execAsync
+const singleton = new Exec()
+export const exec = singleton.exec
+export const execSync = singleton.execSync
+export const execAsync = singleton.execAsync

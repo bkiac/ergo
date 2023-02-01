@@ -48,7 +48,7 @@ describe("handleError", () => {
 	})
 
 	it("should panic on invalid type without preprocess", () => {
-		;[0, "", true, null, undefined, Symbol("symbol"), {}, []].forEach((invalid) => {
+		;[0, "", true, null, undefined, Symbol(), [], {}].forEach((invalid) => {
 			expect(() => handleError(invalid)).toThrowError(typeof invalid)
 		})
 	})

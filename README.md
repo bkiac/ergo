@@ -81,7 +81,7 @@ function foo(): number {
 const [error, value] = g.exec(foo, {
 	recover: true, // `false` by default
 })
-console.log(error instance of g.Panic) // true
+console.log(error instanceof g.Panic) // true
 ```
 
 Use `panicOn` option to specify error instances that should be seen as panic

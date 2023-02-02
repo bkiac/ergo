@@ -55,26 +55,28 @@ const [error, value] = bar(0, "1") // Wrapped function keeps function signature
 
 ### Panic
 
-Throw panic if something is really wrong
+Throw panic instead of error if something is really wrong
 
 ```ts
-function foo(): g.Result {
-	if (Math.random() < 0.5) {
-		throw new g.Panic()
+function foo(): number {
+	const r = Math.random() 
+	if (r < 0.5) {
+		throw new g.Panic("too low")
 	}
-	return g.ok()
+	return r
 }
-const [error, value] = foo() // Will throw error
+const [error, value] = g.exec(foo) // Will throw error
 ```
 
 Use `recover` option to recover from panics
 
 ```ts
-function foo(): g.Result {
-	if (Math.random() < 0.5) {
+function foo(): number {
+	const r = Math.random()
+	if (r < 0.5) {
 		throw new g.Panic()
 	}
-	return g.ok()
+	return r
 }
 const [error, value] = g.exec(foo, {
 	recover: true, // `false` by default

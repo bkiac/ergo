@@ -59,7 +59,7 @@ Throw panic instead of error if something is really wrong
 
 ```ts
 function foo(): number {
-	const r = Math.random() 
+	const r = Math.random()
 	if (r < 0.5) {
 		throw new g.Panic("too low")
 	}
